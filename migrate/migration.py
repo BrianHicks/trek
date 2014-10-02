@@ -17,19 +17,19 @@ class Migration(object):
             raise ValueError('Need exactly one down migration, have %d' % downs)
 
     def _parse_up(self, content):
-        upstart = list(itertools.dropwhile(
+        start = list(itertools.dropwhile(
             lambda line: self._up not in line, content.split('\n')
         ))[1:]
-        upcontent = itertools.takewhile(
-            lambda line: self._down not in line, upstart
+        content = itertools.takewhile(
+            lambda line: self._down not in line, start
         )
-        return '\n'.join(upcontent)
+        return '\n'.join(content)
 
     def _parse_down(self, content):
-        downstart = list(itertools.dropwhile(
+        content = list(itertools.dropwhile(
             lambda line: self._down not in line, content.split('\n')
         ))[1:]
-        return '\n'.join(downstart)
+        return '\n'.join(content)
 
     def __init__(self, content):
         self._validate(content)
