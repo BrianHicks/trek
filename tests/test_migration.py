@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import pytest
-from migrate import parse
+from migrate import migration
 
 
 class TestMigration(object):
@@ -13,7 +13,7 @@ class TestMigration(object):
         up = '\n'.join([self.up] * lines)
         down = '\n'.join([self.down] * lines)
 
-        mig = parse.Migration('\n'.join([
+        mig = migration.Migration('\n'.join([
             up_stmt,   up,
             down_stmt, down,
         ]))
@@ -31,7 +31,7 @@ class TestMigration(object):
         lines += [down_stmt] * (count if how == 'down' else 1) + [self.down]
 
         with pytest.raises(ValueError) as err:
-            parse.Migration('\n'.join(lines))
+            migration.Migration('\n'.join(lines))
 
         msg = 'Need exactly one %s migration, have %d' % (how, count)
         assert msg in str(err)
