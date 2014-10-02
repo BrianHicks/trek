@@ -51,7 +51,7 @@ class Migrator(object):
 
             if self.direction == 'up':
                 self.runner.up(name, migration)
-            else:
+            elif self.direction == 'down':
                 self.runner.down(name, migration)
             else:
                 raise ValueError('Unknown migration direction "%s"' % self.direction)
