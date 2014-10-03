@@ -3,6 +3,12 @@ from .migration import Migration
 from importlib import import_module
 import os
 
+# the way this is used in a slice means that if we want all the migrations we
+# need to specify them as `None` (because `[1,2,3][:None] == [1,2,3]`). Since
+# this is pretty confusing, it's specified in this name instead.
+ALL = None
+
+
 class Migrator(object):
     def __init__(self, count, runner_path, migrations_dir, direction, extra):
         self.count = count
@@ -19,7 +25,7 @@ class Migrator(object):
 
     def migrations_to_run(self):
         try:
-            names = names(os.listdir(self.migrations_dir))
+            names = os.listdir(self.migrations_dir)
         except OSError:  # explicitly raising this. Deal with it!
             raise
 
@@ -28,13 +34,13 @@ class Migrator(object):
 
         if self.direction == 'up':
             return [
-                m for m in migrations
-                if self.current < m
+                name for name in names
+                if self.current < name
             ][:self.count]
         elif self.direction == 'down':
             return [
-                m for m in reversed(migrations)
-                if self.current >= m
+                name for name in reversed(names)
+                if self.current >= name
             ][:self.count]
         else:
             raise ValueError('Unknown migration direction "%s"' % self.direction)
