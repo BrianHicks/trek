@@ -23,6 +23,10 @@ class Migrator(object):
         package, name = path.split(':', 1)
         return getattr(import_module(package), name)
 
+    def get_migration(self, name):
+        with open(os.path.join(self.migrations_dir, name), 'r') as raw:
+            return Migration(raw.read())
+
     def migrations_to_run(self):
         try:
             names = os.listdir(self.migrations_dir)
@@ -45,21 +49,25 @@ class Migrator(object):
         else:
             raise ValueError('Unknown migration direction "%s"' % self.direction)
 
+    def migrate(self, names):
+        for name in names:
+            migration = self.get_migration(name)
+
+            if self.direction == 'up':
+                yield 'migration', self.runner.up(name, migration)
+            elif self.direction == 'down':
+                yield 'migration', self.runner.down(name, migration)
+            else:
+                raise ValueError(
+                    'Unknown migration direction "%s"' % self.direction
+                )
+        else:
+            yield 'info', 'No migrations necessary!'
+
     def run(self):
         "put all the parts together"
         names = self.migrations_to_run()
-        if not names:
-            return {'message': 'No migrations necessary!'}
+        for pair in self.migrate(names):
+            yield pair
 
-        for name in names:
-            with open(os.path.join(self.migrations_dir, name), 'r'):
-                migration = Migration(mig.read())
-
-            if self.direction == 'up':
-                self.runner.up(name, migration)
-            elif self.direction == 'down':
-                self.runner.down(name, migration)
-            else:
-                raise ValueError('Unknown migration direction "%s"' % self.direction)
-
-        return {'message': 'Ran %d migrations' % len(names)}
+        yield 'info', 'Ran %d migrations' % len(names)
