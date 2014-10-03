@@ -1,2 +1,4 @@
-pytest
-tox
+py==1.4.24
+pytest==2.6.3
+tox==1.8.0
+psycopg2==2.5.4
