@@ -4,18 +4,18 @@ from importlib import import_module
 import os
 
 class Migrator(object):
-    def __init__(self, count, runner_path, migrations_dir, direction, *args, **kwargs):
+    def __init__(self, count, runner_path, migrations_dir, direction, extra):
         self.count = count
         self.migrations_dir = migrations_dir
         self.direction = direction
 
-        runner_cls = self.runner(runner_path)
-        self.runner = runner_cls(*args, **kwargs)
+        runner_cls = self.get_runner(runner_path)
+        self.runner = runner_cls(extra)
         self.current = self.runner.version()
 
-    def runner(self, path):
-        package, name = path.rsplit('.', 1)
-        return import_module(name, package)
+    def get_runner(self, path):
+        package, name = path.split(':', 1)
+        return getattr(import_module(package), name)
 
     def migrations_to_run(self):
         try:
