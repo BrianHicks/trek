@@ -3,7 +3,17 @@ import pytest
 import py
 from migrate import Migrator, ALL
 
-TEST_COMMENTS = ['#', '--', '//', ';', '"']
+TEST_COMMENTS = [
+    # representative comment characters from...
+    '#',  # python
+    '--', # sql
+    '//', # c
+    ';',  # clojure
+    '"',  # viml
+    # we probably don't need more than this *but* if in the future a comment
+    # char or style screws things up add it to make sure we don't regress! This
+    # is only a list of things I thought of immediately.
+]
 UP_CMD = 'MIGRATE UP'
 DOWN_CMD = 'MIGRATE DOWN'
 
