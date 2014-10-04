@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-import pytest
 from .conftest import DebugRunner, DEBUG_RUNNER_PATH
+from migrate.migration import Migration
+import pytest
 
 
 class TestRunner(object):
@@ -57,3 +58,10 @@ class TestMigrationsToRun(object):
             migrator.migrations_to_run()
 
         assert 'No migrations to run in' in str(err)
+
+
+@pytest.mark.migrations(('1', ('', '')))
+def test_get_migration(migrator):
+    "only a cursory test here, as Migration is tested elsewhere"
+    migration = migrator.get_migration('1')
+    assert isinstance(migration, Migration)
