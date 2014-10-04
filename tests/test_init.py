@@ -65,3 +65,23 @@ def test_get_migration(migrator):
     "only a cursory test here, as Migration is tested elsewhere"
     migration = migrator.get_migration('1')
     assert isinstance(migration, Migration)
+
+
+@pytest.mark.migrations(('1', ('up', 'down')))
+@pytest.mark.parametrize('direction', ['up', 'down'])
+def test_migrate(migrator, direction):
+    migrator.direction = direction
+
+    assert list(migrator.migrate(['1'])) == [('migration', direction)]
+
+
+@pytest.mark.migrations(('1', ('up', 'down')))
+@pytest.mark.parametrize('direction', ['up', 'down'])
+def test_run(migrator, direction):
+    migrator.direction = direction
+    migrator.current = '0' if direction == 'up' else '1'
+
+    assert list(migrator.run()) == [
+        ('migration', direction),
+        ('info', 'Ran 1 migration(s)')
+    ]

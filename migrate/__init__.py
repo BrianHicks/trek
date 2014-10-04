@@ -50,6 +50,10 @@ class Migrator(object):
             raise ValueError('Unknown migration direction "%s"' % self.direction)
 
     def migrate(self, names):
+        if not names:
+            yield 'info', 'No migrations necessary!'
+            return
+
         for name in names:
             migration = self.get_migration(name)
 
@@ -61,8 +65,6 @@ class Migrator(object):
                 raise ValueError(
                     'Unknown migration direction "%s"' % self.direction
                 )
-        else:
-            yield 'info', 'No migrations necessary!'
 
     def run(self):
         "put all the parts together"
@@ -70,4 +72,4 @@ class Migrator(object):
         for pair in self.migrate(names):
             yield pair
 
-        yield 'info', 'Ran %d migrations' % len(names)
+        yield 'info', 'Ran %d migration(s)' % len(names)

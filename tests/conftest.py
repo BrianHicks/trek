@@ -27,9 +27,11 @@ class DebugRunner(object):
 
     def up(self, name, migration):
         self.ups.append((name, migration))
+        return migration.up
 
     def down(self, name, migration):
         self.downs.append((name, migration))
+        return migration.down
 
 DEBUG_RUNNER_PATH = '%s:%s' % (__name__, DebugRunner.__name__)
 
