@@ -6,10 +6,10 @@ import os
 @pytest.fixture(scope='session')
 def postgres_info():
     return {
-        'database': os.environ.get('PGDATABASE', 'migrate_test'),
+        'database': os.environ.get('PGDATABASE', 'trek_test'),
         'host': os.environ.get('PGHOST', 'localhost'),
         'port': int(os.environ.get('PGPORT', '5432')),
-        'user': os.environ.get('PGUSER', 'migrate_test'),
+        'user': os.environ.get('PGUSER', 'trek_test'),
         'password': os.environ.get('PGPASSWORD', None),
     }
 

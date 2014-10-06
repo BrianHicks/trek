@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from .conftest import DebugRunner, DEBUG_RUNNER_PATH
-from migrate.migration import Migration
+from trek.migration import Migration
 import pytest
 
 

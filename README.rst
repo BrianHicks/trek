@@ -1,13 +1,13 @@
-Migrate
-=======
+Trek
+====
 
-Migrate is a *simple* tool to do migrations of whatever you'd like. It has
+Trek is a *simple* tool to do migrations of whatever you'd like. It has
 terrible documentation because it's pre-1.0.
 
 Usage
 -----
 
-Install! ``pip install migrate``
+Install! ``pip install trek``
 
 Now say you have a directory of migrations::
 
@@ -33,7 +33,7 @@ use timestamps like ``2014-01-01T00-00-00_human_name.sql``)
 
 You can then run::
 
-    migrate --runner=postgres up postgres://migrate_test@localhost/migrate_test
+    trek --runner=postgres up postgres://trek_test@localhost/trek_test
 
 And the migrations will be run for you. Magic!
 
@@ -50,7 +50,7 @@ to so that the user knows what's going on.
 After you put your migrator in a file, specify it with
 ``python.path.to.module:MigratorName``. For example, the postgres migrator is
 expanded by the CLI interface but it's full path is
-``migrate.runners.postgres:PostgresRunner``
+``trek.runners.postgres:PostgresRunner``
 
 TODO
 ----

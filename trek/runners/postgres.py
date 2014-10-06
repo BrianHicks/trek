@@ -40,7 +40,7 @@ class PostgresRunner(object):
     def _create_table(self):
         with self.conn.cursor() as cursor:
             cursor.execute('''
-                CREATE TABLE IF NOT EXISTS migrate_migrations (
+                CREATE TABLE IF NOT EXISTS trek_migrations (
                     name TEXT PRIMARY KEY
                 )
             ''')
@@ -52,7 +52,7 @@ class PostgresRunner(object):
         try:
             with self.conn.cursor() as cursor:
                 cursor.execute('''
-                    SELECT name FROM migrate_migrations
+                    SELECT name FROM trek_migrations
                     ORDER BY name DESC
                     LIMIT 1
                 ''')
@@ -61,7 +61,7 @@ class PostgresRunner(object):
             self.conn.commit()
 
         except ProgrammingError as err:
-            if 'relation "migrate_migrations" does not exist' in str(err):
+            if 'relation "trek_migrations" does not exist' in str(err):
                 self.conn.rollback()
                 self._create_table()
             else:
@@ -87,7 +87,7 @@ class PostgresRunner(object):
             with self.conn.cursor() as cursor:
                 map(cursor.execute, self._split_sql(migration.up))
                 cursor.execute(
-                    "INSERT INTO migrate_migrations VALUES (%s)",
+                    "INSERT INTO trek_migrations VALUES (%s)",
                     (name,)
                 )
 
@@ -106,7 +106,7 @@ class PostgresRunner(object):
             with self.conn.cursor() as cursor:
                 map(cursor.execute, self._split_sql(migration.down))
                 cursor.execute(
-                    "DELETE FROM migrate_migrations WHERE name = %s",
+                    "DELETE FROM trek_migrations WHERE name = %s",
                     (name,)
                 )
 

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import pytest
 import py
-from migrate import Migrator, ALL
+from trek import Migrator, ALL
 
 TEST_COMMENTS = [
     # representative comment characters from...

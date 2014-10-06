@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from migrate.migration import Migration
-from migrate.runners.postgres import PostgresRunner
+from trek.migration import Migration
+from trek.runners.postgres import PostgresRunner
 from psycopg2 import ProgrammingError
 import pytest
 
@@ -56,23 +56,23 @@ def runner(postgres_info, connection, cursor):
 
     yield runner
 
-    cursor.execute('DROP TABLE IF EXISTS migrate_migrations')
+    cursor.execute('DROP TABLE IF EXISTS trek_migrations')
     connection.commit()
 
 
 class TestVersion(object):
     def test_creates_table(self, connection, runner):
-        _table_presence(connection, 'migrate_migrations', False)
+        _table_presence(connection, 'trek_migrations', False)
 
         assert runner.version() is None
 
-        _table_presence(connection, 'migrate_migrations', True)
+        _table_presence(connection, 'trek_migrations', True)
 
     def test_returns_version(self, connection, runner):
         runner._create_table()
 
         with connection.cursor() as cursor:
-            cursor.execute("INSERT INTO migrate_migrations VALUES ('1')")
+            cursor.execute("INSERT INTO trek_migrations VALUES ('1')")
         connection.commit()
 
         assert runner.version() == '1'
@@ -93,7 +93,7 @@ def test_up(request, connection, runner):
     assert not runner.stopped
 
     with connection.cursor() as cursor:
-        cursor.execute('SELECT name FROM migrate_migrations')
+        cursor.execute('SELECT name FROM trek_migrations')
         assert cursor.fetchall() == [(name,)]
 
     _table_presence(connection, TABLE, True)
@@ -107,7 +107,7 @@ def test_down(request, connection, runner):
     _table_presence(connection, TABLE, True)
 
     with connection.cursor() as cursor:
-        cursor.execute("INSERT INTO migrate_migrations VALUES (%s)", (name,))
+        cursor.execute("INSERT INTO trek_migrations VALUES (%s)", (name,))
     connection.commit()
 
     messages = list(runner.down(name, MIGRATION))
@@ -119,7 +119,7 @@ def test_down(request, connection, runner):
     assert not runner.stopped
 
     with connection.cursor() as cursor:
-        cursor.execute('SELECT name FROM migrate_migrations')
+        cursor.execute('SELECT name FROM trek_migrations')
         assert cursor.fetchall() == []
 
     _table_presence(connection, TABLE, False)

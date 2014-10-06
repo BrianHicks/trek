@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import pytest
-from migrate import migration
+from trek import migration
 
 
 class TestMigration(object):
