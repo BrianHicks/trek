@@ -55,8 +55,8 @@ expanded by the CLI interface but it's full path is
 TODO
 ----
 
- - ✓ release on PyPI
- - ✓ add Postgres migrator
- - add other migrators as needed (open an issue on Github, for what you want,
-   please!)
- - add flask-script manager interface
+- ✓ release on PyPI
+- ✓ add Postgres migrator
+- add other migrators as needed (open an issue on Github, for what you want,
+  please!)
+- add flask-script manager interface
