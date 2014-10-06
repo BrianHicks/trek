@@ -34,7 +34,7 @@ class Migrator(object):
             raise
 
         if not names:
-            raise ValueError('No migrations to run in %s' % self.migrations_dir)
+            raise ValueError('No migrations to run in "%s"' % self.migrations_dir)
 
         if self.direction == 'up':
             return [
