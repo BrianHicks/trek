@@ -58,9 +58,11 @@ class Migrator(object):
             migration = self.get_migration(name)
 
             if self.direction == 'up':
-                yield 'migration', self.runner.up(name, migration)
+                for message in self.runner.up(name, migration):
+                    yield message
             elif self.direction == 'down':
-                yield 'migration', self.runner.down(name, migration)
+                for message in self.runner.down(name, migration):
+                    yield message
             else:
                 raise ValueError(
                     'Unknown migration direction "%s"' % self.direction

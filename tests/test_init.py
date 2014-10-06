@@ -72,7 +72,7 @@ def test_get_migration(migrator):
 def test_migrate(migrator, direction):
     migrator.direction = direction
 
-    assert list(migrator.migrate(['1'])) == [('migration', direction)]
+    assert list(migrator.migrate(['1'])) == [('info', direction)]
 
 
 @pytest.mark.migrations(('1', ('up', 'down')))
@@ -82,6 +82,6 @@ def test_run(migrator, direction):
     migrator.current = '0' if direction == 'up' else '1'
 
     assert list(migrator.run()) == [
-        ('migration', direction),
+        ('info', direction),
         ('info', 'Ran 1 migration(s)')
     ]
