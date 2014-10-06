@@ -73,10 +73,19 @@ class PostgresRunner(object):
 
         return result[0] if result is not None else result
 
+    def _split_sql(self, sql):
+        return [
+            stmt for stmt in sql.split(';')
+            if stmt.strip() != ''
+        ]
+
     def up(self, name, migration):
+        if self.stopped:
+            yield 'info', 'Already stopped.'
+
         try:
             with self.conn.cursor() as cursor:
-                map(cursor.execute, migration.up.split(';'))
+                map(cursor.execute, self._split_sql(migration.up))
                 cursor.execute(
                     "INSERT INTO migrate_migrations VALUES (%s)",
                     (name,)
@@ -90,9 +99,12 @@ class PostgresRunner(object):
             yield 'error', 'Migrating %s up resulted in an error: %s' % (name, err)
 
     def down(self, name, migration):
+        if self.stopped:
+            yield 'info', 'Already stopped.'
+
         try:
             with self.conn.cursor() as cursor:
-                map(cursor.execute, migration.down.split(';'))
+                map(cursor.execute, self._split_sql(migration.down))
                 cursor.execute(
                     "DELETE FROM migrate_migrations WHERE name = %s",
                     (name,)
