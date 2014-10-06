@@ -3,6 +3,10 @@
 clean:
 	./setup.py clean
 
+develop:
+	pip install -r requirements.txt
+	./setup.py develop
+
 dist:
 	./setup.py sdist bdist_wheel
 
